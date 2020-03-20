@@ -1,0 +1,614 @@
+<!-- VERSÃO PARA TESTES
+
+Autor: Carlos Machado Jr
+    
+-->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curvatura da Terra</title>
+
+<!------- TO DO: CRIAR ARQUIVO .CSS -------->
+
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+            color: #444;
+
+        }
+        table {
+            background-color: #eeeeee;
+            border-collapse: collapse;
+            border: 1px solid rgb(214, 214, 214);
+            margin-left: 10px;
+            width: 58%;
+        }    
+        
+        input{
+            border:1.1px solid #999999;
+            border-radius: 3.5px;
+            padding: 5px;
+            width: 150px;
+            font-size: .9rem;
+            text-align: right;
+
+        }   
+        input::placeholder{
+            color:#999999;
+            font-style: italic;
+        }   
+
+        button{ 
+            width: 45%;
+            height: 35px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            margin-left: 70px;
+            background-color: #333586;
+            box-shadow: 2px 2px #888888;
+        }
+
+        .c1 {
+            width: 18%;       
+        }
+
+        .c2 {
+            width: 20.5%;
+        }
+
+        .c3 {
+            width: 4.5%;
+        }
+
+        .c4 {
+            width: 3%;
+            background-color: white;
+            border-top: 1px solid white;
+            border-bottom: 1px solid white;
+            border-left: 1px solid rgb(214, 214, 214);
+            border-right: 1px solid rgb(214, 214, 214);
+        }
+
+        .c5 {
+            width: 29%;
+        }
+
+        .c6 {
+            width: 20%;
+        }
+
+        .c7 {
+            width: 5%;
+        }
+
+        .label{
+            color:#444;
+            margin-left: 10px;
+            font-size: .9rem;   
+        }
+
+        .units{
+            color:#444;
+
+            font-size: .95rem;
+        }
+
+        #coef_k2::placeholder{
+            color: #444;
+            font-style: normal;
+        }
+    
+        .cabecalho {
+            background-color: white;
+            border: 0px;
+            font-size: 0.95rem;
+        }
+
+        .rodape {
+            background-color: white;
+            height: 70px;            
+            border: 0px;
+        }
+
+        .td_geometrico {
+            width: 46.5%;
+        }
+
+        .td_refracao {
+            width: 53.5%;
+        }
+
+        .label_radio {
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .td_buttom {
+            width: 46%;
+        }
+
+        .td_radio {
+            width: 54%;
+        }
+
+        .radio_button {
+            width: 20px;
+        }
+
+        #result {
+            font-size: 0.95rem;
+        }
+
+        .result {
+            margin-left: 15px;
+            margin: 10px;
+        }
+
+        #img1 {
+            width: 55%;
+            height: 55%;
+            margin-left: 30px;
+    
+        }
+
+        .destaque {
+            font-weight: bold;
+        
+        }
+
+        .oculto {
+            font-weight: bold;
+            color: #cc3333;
+            font-size: 0.95rem;
+        }
+
+        .visivel {
+            font-weight: bold;
+            color: #18a356;
+            font-size: 0.95rem;
+        }
+
+    </style>
+
+<!------------------------------------------>
+
+</head>
+
+<body>
+    
+    <h2>Horizonte e Curvatura da Terra</h2>
+
+    <ul>
+        <li>Este aplicativo calcula a distância do horizonte em relação a um determinado observador, tal como a obstrução causada</li>
+        <li style="list-style-type:none;">pela curvatura da Terra, para um objeto distante.</li>
+    </ul>  
+
+    <table class="cabecalho">
+        <tr>
+            <td class="td_geometrico">
+                <p class="result"><strong>Cálculo Geométrico:</strong></p>
+   
+            </td>
+            <td class="td_refracao">
+                <p class="result"><strong>Cálculo da Refração Atmosférica:</strong></p>
+   
+            </td>
+         
+        </tr>
+    </table>
+
+    <table>
+
+        <tr>
+            <td class="c1">
+                <p class="label">Raio da Terra</p>
+            </td>
+            <td class="c2">
+                <input type="text" id="r_terra" value=6371 placeholder='6371' onkeypress="return calcular(event)">
+            </td>
+            <td class="c3">
+                <p class="units">km</p>
+            </td>
+            <td class="c4">
+
+            </td>
+            <td class="c5">
+                <p class="label">Pressão Atmosférica</p>
+            </td>
+            <td class="c6">
+                <input type="text" id="pressao" placeholder='1 atm = 101325' onkeypress="return calcular(event)">
+            </td>
+            <td class="c7">
+                <p class="units">Pa</p>
+            </td>
+        </tr>       
+
+        <tr>
+            <td class="c1">
+                <p class="label">Altura do Observador</p>
+            </td>
+            <td class="c2">
+                <input type="text" id="h_observ" placeholder='1.75' onkeypress="calcular(event)">
+            </td>
+            <td class="c3">
+                <p class="units">m</p>
+            </td>
+            <td class="c4">
+
+            </td>
+            <td class="c5">
+                <p class="label">Temperatura ambiente</p>
+            </td>
+            <td class="c6">
+                <input type="text" id="temperatura" placeholder='20'  onkeypress="calcular(event)">
+            </td>
+            <td class="c7">
+                <p class="units">°C</p>
+            </td>
+        </tr>
+    
+            <td class="c1">
+                <p class="label">Distância do alvo</p>
+            </td>
+            <td class="c2">
+                <input type="text" id="d_alvo" placeholder='20'  onkeypress="calcular(event)"> 
+            </td>
+            <td class="c3">
+                <p class="units">km</p>
+            </td>
+            <td class="c4">
+
+            </td>
+            <td class="c5">
+                <p class="label">Gradiente Vertical de Temperatura</p>
+            </td>
+            <td class="c6">
+                <input type="text" id="gradiente" class="entrada" placeholder='-0.0065' onkeypress="calcular(event)">
+            </td>
+            <td class="c7">
+                <p class="units"> °C/m</p>
+            </td>
+        </tr>   
+
+        </tr>
+            <td class="c1">
+                <p class="label">Altura do alvo</p>
+            </td>
+            <td class="c2">
+                <input type="text" id="h_alvo" placeholder='opcional ' onkeypress="calcular(event)">
+            </td>
+            <td class="c3">
+                <p class="units"></p>m</p>
+            </td>
+            <td class="c4">
+
+            </td>
+            <td class="c5">
+                <p class="label">Coeficiente de Refração 'k'</p>
+            </td>
+            <td class="c6">
+                <input type="text" id="coef_k" placeholder='0.165' onkeypress="calcular(event)">
+            </td>
+            <td class="c7">
+                <p class="units"></p>
+            </td>
+        </tr>   
+    </table>
+
+    <table class="rodape">
+        <tr>
+            <td class="td_buttom">
+                <button onclick="calcular(event)">CALCULAR</button>                
+            </td>
+            <td class="td_radio">
+                <form action="/action_page.php">
+                    <input type="radio" id="completo" class="radio_button" name="refr" value="1" onchange="modificar()">
+                    <spam class="label_radio">Calcular o Coef. de Refração 'k' em função dos parâmetros meteorológicos</spam>
+                    <br>   
+                    <input type="radio" id="simplificado" class="radio_button" name="refr" value="2" onchange="modificar()">   
+                    <spam class="label_radio">Fornecer valor do Coeficiente de Refração 'k'</spam>       
+                </form>
+            </td>
+        </tr>
+    </table>
+ 
+    <br>
+
+    <table id="result">
+        <tr>
+            <td>
+    
+                <p id="p1a" class="result"><strong>Desconsiderando os efeitos da refração atmosférica:</strong></p>
+
+                <p id="p2a" class="result">O horizonte se encontra a uma distância de 
+                    <spam id ="d_hor" class="destaque"></spam>do observador.
+
+                <p id="p3a" class="result">Para um alvo localizado a 
+                    <spam id="d_alvo_result" class="destaque"></spam> desse mesmo observador, há uma obstrução de 
+                    <spam id="h_oculta" class="oculto"></spam></p>
+
+                <p id="p3aa" class="result">Para um alvo localizado a 
+                    <spam id = "d_alvo_result2" class="destaque"></spam> desse mesmo observador se encontra AQUÉM do horizonte e portanto é <br>
+                    visível em sua totalidade.</p>
+
+                <p id="p4a" class="result">A esta distância, um objeto de 
+                    <spam id = "h_alvo2" class="destaque"></spam>de altura tem
+                    <spam id = "h_oculta2" class="oculto"></spam> de sua altura <spam class="oculto">encoberta</spam> e 
+                    <spam id = "h_visivel" class="visivel"></spam>.</p>
+
+                <p id="p4aa" class="result">A esta distância, um objeto de 
+                    <spam id = "h_alvo3" class="destaque"></spam>de altura está <spam class = "oculto">totalmente obstruído</spam> pela curvatura da Terra, com o seu topo a <br>
+                    <spam id = "h_oculta3" class="oculto"></spam>abaixo da linha do horizonte.</p>
+                    
+                <br><p id="p1b" class="result"><strong>Considerando os efeitos da refração atmosférica:</strong></p>
+
+                <p id="p2b" class="result">O horizonte se encontra a uma distância de 
+                    <spam id = "d_hor_ref" class="destaque"></spam>do observador.</p>
+
+                <p id="p3b" class="result">Para um alvo localizado a 
+                    <spam id = "d_alvo_result3" class="destaque"></spam>desse mesmo observador, há uma 
+                    <spam id = "h_oculta_ref" class="oculto"></spam></p>
+
+                <p id="p4b" class="result">A esta distância, um objeto de  
+                    <spam id = "h_alvo_ref" class="destaque"></spam>de altura tem
+                    <spam id = "h_oculta_ref2" class="oculto"></spam> de sua altura encoberta e 
+                    <spam id = "h_visivel_ref" class="visivel"></spam>.</p>
+
+                <p id="p3ba" class="result">Para um alvo localizado a 
+                    <spam id = "d_alvo_result4"></spam> km desse mesmo observador se encontra AQUÉM do horizonte e portanto é <br>
+                    visível em sua totalidade.</p> 
+
+                <p id="p4ba" class="result">A esta distância, um objeto de 
+                    <spam id = "h_alvo4" class="destaque"></spam>de altura está <spam class="oculto">totalmente obstruído</spam> pela curvatura da Terra, com o seu topo a <br>
+                    <spam id = "h_oculta4" class="oculto"></spam>abaixo da linha do horizonte.</p>
+              
+            </td>
+        </tr>
+
+    </table>
+
+<br>
+<img src="https://i.ibb.co/sWdL8v8/curve.png" id="img1">
+
+
+<!------------------------------------------>
+
+<!------- TO DO: CRIAR ARQUIVO .JS -------->   
+
+    <script>
+        
+        var radio_value = 1;
+        document.querySelector("#completo").checked = true;
+
+        document.querySelector("#coef_k").setAttribute("disabled", "disabled");
+        document.querySelector("#coef_k").value = " ";       
+
+        function modificar() {
+            document.querySelector("#result").style.display="none";
+            if (document.querySelector("#completo").checked == true) {
+                document.querySelector("#coef_k").setAttribute("disabled", "disabled");
+                document.querySelector("#pressao").removeAttribute("disabled");
+                document.querySelector("#temperatura").removeAttribute("disabled");  
+                document.querySelector("#gradiente").removeAttribute("disabled");  
+                document.querySelector("#coef_k").value = " ";
+                document.querySelector("#temperatura").value = ""; 
+                document.querySelector("#pressao").value = ""; 
+                document.querySelector("#temperatura").value = ""; 
+                document.querySelector("#gradiente").value = "";
+                radio_value = 1                  
+            } else {
+                document.querySelector("#coef_k").removeAttribute("disabled");
+                document.querySelector("#temperatura").setAttribute("disabled", "disabled");
+                document.querySelector("#pressao").setAttribute("disabled", "disabled");
+                document.querySelector("#temperatura").setAttribute("disabled", "disabled");
+                document.querySelector("#gradiente").setAttribute("disabled", "disabled");
+                document.querySelector("#coef_k").value = "";  
+                document.querySelector("#temperatura").value = " "; 
+                document.querySelector("#pressao").value = " "; 
+                document.querySelector("#temperatura").value = " "; 
+                document.querySelector("#gradiente").value = " ";
+                radio_value = 2                                   
+            }
+        }
+
+        document.querySelector("#result").style.display="none";
+
+        function calcular(e) { 
+
+            var prosseguir = true;
+
+            if (e.keyCode != 13) {
+                if (e.keyCode != null) {
+                    prosseguir = false
+                }
+            }  
+
+            if (prosseguir == true) {
+
+                document.querySelector("#result").style.display="block";
+
+                // Raio da Terra //
+                var r_terra = parseFloat(document.querySelector("#r_terra").value);
+                if (isNaN(r_terra)) {
+                    r_terra = 6371000;
+                    document.querySelector("#r_terra").value = "6371";
+                } else {
+                    r_terra = r_terra * 1000;
+                }
+
+                // Altura do Observador //
+                var h_observ = parseFloat(document.querySelector("#h_observ").value);
+                if (isNaN(h_observ)) {
+                    h_observ = 1.75;
+                    document.querySelector("#h_observ").value = 1.75;
+                }
+
+                // Distância do Alvo //
+                var d_alvo = parseFloat(document.querySelector("#d_alvo").value);
+                if (isNaN(d_alvo)) {
+                    d_alvo = 20000;
+                    document.querySelector("#d_alvo").value = 20;
+                } else {
+                    d_alvo = d_alvo * 1000;
+                }
+
+                // Altura do Alvo //
+                var h_alvo = parseFloat(document.querySelector("#h_alvo").value);
+                if (isNaN(h_alvo)) {
+                    h_alvo = false;
+                    document.querySelector("#h_alvo").value = "";
+                }
+
+                // Pressão Atmosférica //
+                var pressao = parseFloat(document.querySelector("#pressao").value);
+                if (radio_value == 2) {
+                    document.querySelector("#pressao").value = " ";
+                } else {
+                    if (isNaN(pressao)) {
+                        pressao = 101325;
+                        document.querySelector("#pressao").value = 101325; 
+                    }              
+                    pressao = pressao * 0.01 
+                }
+
+                // Temperatura Ambiente //
+                var temperatura = parseFloat(document.querySelector("#temperatura").value);
+                if (radio_value == 2) {
+                    document.querySelector("#temperatura").value = " ";
+                } else {
+                    if (isNaN(temperatura)) {
+                        temperatura = 20;
+                        document.querySelector("#temperatura").value = 20; 
+                    }              
+                    temperatura = temperatura + 273.15 
+                }
+
+                // Gradiente Vertical de Temperatura //
+                var gradiente = parseFloat(document.querySelector("#gradiente").value);
+                if (radio_value == 2) {
+                    document.querySelector("#gradiente").value = " ";
+                } else {
+                    if (isNaN(gradiente)) {
+                        gradiente = -0.0065;
+                        document.querySelector("#gradiente").value = -0.0065; 
+                    }              
+                }
+
+                // Coeficiente de Refração //
+                var coef_k = parseFloat(document.querySelector("#coef_k").value);
+                if (radio_value == 1) {
+                    coef_k = (503 * pressao / temperatura ** 2) * (0.0343 + gradiente);
+                    document.querySelector("#coef_k").value = coef_k.toFixed(3);
+                } else {
+                    if (isNaN(coef_k)) {
+                        coef_k = 0.165;
+                        document.querySelector("#coef_k").value = 0.165; 
+                    }              
+                }
+
+                // Geometria //
+
+                var d_hor = ((r_terra + h_observ) ** 2 - r_terra ** 2) ** 0.5;
+                var h_oculta = (r_terra ** 2 + (d_alvo - d_hor) ** 2) ** 0.5 - r_terra;
+                d_hor = (d_hor * 0.001).toFixed(2);
+                h_oculta = h_oculta.toFixed(2);
+
+                document.querySelector("#d_hor").innerHTML = d_hor + ' km ';
+                document.querySelector("#h_oculta").innerHTML ='obstrução de ' + h_oculta + ' metros';
+                document.querySelector("#d_alvo_result").innerHTML = (d_alvo*0.001).toFixed(2) + ' km';
+                document.querySelector("#d_alvo_result2").innerHTML = (d_alvo*0.001).toFixed(2) + ' km';
+
+                var h_visivel = (h_alvo - h_oculta).toFixed(2);  
+                var h_visivel_perc = ((h_visivel/h_alvo) * 100).toFixed(1);
+                var h_oculta_perc = ((h_oculta/h_alvo) * 100).toFixed(1); 
+
+                if (h_alvo != false) {  
+                    if (h_alvo >= h_oculta) {
+                        document.querySelector("#p4a").style.display="block";           
+                        document.querySelector("#p4aa").style.display="none";
+                        document.querySelector("#h_alvo").innerHTML = h_alvo + ' metros ';
+                        document.querySelector("#h_visivel").innerHTML = h_visivel_perc + '% (' + h_visivel + ' m) visível';
+                        document.querySelector("#h_alvo2").innerHTML = h_alvo + ' metros ';
+                        document.querySelector("#h_oculta2").innerHTML = h_oculta_perc + '% (' + h_oculta + ' m) ';
+                    } else {
+                        document.querySelector("#p4a").style.display="none";  
+                        document.querySelector("#p4aa").style.display="block";           
+                        document.querySelector("#h_alvo3").innerHTML = h_alvo + ' metros ';
+                        document.querySelector("#h_oculta3").innerHTML = - h_visivel + ' metros ';
+                    }
+
+                } else {
+                    document.querySelector("#p4a").style.display="none";
+                    document.querySelector("#p4aa").style.display="none";
+                }
+
+                if (d_alvo < d_hor * 1000) {
+                    document.querySelector("#p3aa").style.display="block";
+                    document.querySelector("#p3a").style.display="none";
+                    document.querySelector("#p4a").style.display="none";
+                    document.querySelector("#p4aa").style.display="none";
+
+                } else {
+                    document.querySelector("#p3aa").style.display="none";
+                    document.querySelector("#p3a").style.display="block";
+                }
+
+                // Refração //
+
+                var r_efetivo = r_terra /(1 - coef_k);
+                var d_hor_ref = ((r_efetivo + h_observ) ** 2 - r_efetivo ** 2) ** 0.5;
+                var h_oculta_ref = (r_efetivo ** 2 + (d_alvo - d_hor_ref) ** 2) ** 0.5 - r_efetivo;  
+                d_hor_ref = (d_hor_ref * 0.001).toFixed(2);
+                h_oculta_ref = h_oculta_ref.toFixed(2);
+                
+                document.querySelector("#d_hor_ref").innerHTML = d_hor_ref + ' km ';
+                document.querySelector("#h_oculta_ref").innerHTML = ' obstrução de ' + h_oculta_ref + ' metros.';
+                document.querySelector("#d_alvo_result3").innerHTML = (d_alvo*0.001).toFixed(2) + ' km ';
+                document.querySelector("#d_alvo_result4").innerHTML = (d_alvo*0.001).toFixed(2) + ' km ';
+
+                var h_visivel_ref = (h_alvo - h_oculta_ref).toFixed(2);  
+                var h_visivel_perc_ref = ((h_visivel_ref/h_alvo) * 100).toFixed(1);
+                var h_oculta_perc_ref = ((h_oculta_ref/h_alvo) * 100).toFixed(1); 
+
+                if (h_alvo != false) {
+                    if (h_alvo >= h_oculta_ref) {
+                    document.querySelector("#p4b").style.display="block";
+                    document.querySelector("#p4ba").style.display="none";                      
+                    document.querySelector("#h_alvo_ref").innerHTML = h_alvo + ' metros ';
+                    document.querySelector("#h_visivel_ref").innerHTML = h_visivel_perc_ref + '% (' + h_visivel_ref + ' m) visível';
+                    document.querySelector("#h_oculta_ref2").innerHTML = h_oculta_perc_ref + '% (' + h_oculta_ref + ' m)';
+                    } else {
+                        document.querySelector("#p4b").style.display="none";  
+                        document.querySelector("#p4ba").style.display="block";           
+                        document.querySelector("#h_alvo4").innerHTML = h_alvo + ' metros ';
+                        document.querySelector("#h_oculta4").innerHTML = - h_visivel_ref + ' metros ';
+                    }
+
+                } else {
+                    document.querySelector("#p4b").style.display="none";
+                    document.querySelector("#p4ba").style.display="none";  
+                } 
+
+                if (d_alvo < d_hor_ref * 1000) {
+                    document.querySelector("#p3ba").style.display="block";
+                    document.querySelector("#p3b").style.display="none";
+                    document.querySelector("#p4b").style.display="none";
+                    document.querySelector("#p4ba").style.display="none";  
+
+                } else {
+                    document.querySelector("#p3ba").style.display="none";
+                    document.querySelector("#p3b").style.display="block";
+                }
+            }
+        }
+        
+    </script>
+
+</body>
+</html>
